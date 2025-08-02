@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.get("/")
 def home():
-    return jsonify(message="Hello from Flask CI/CD! Prueba 2"), 200
+    return jsonify(message="Hello from Flask CI/CD!"), 200
 
 @app.get("/health")
 def health():
