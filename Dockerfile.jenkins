@@ -1,0 +1,9 @@
+FROM jenkins/jenkins:lts
+
+USER root
+
+RUN apt-get update && \
+    apt-get install -y docker.io
+
+# OPCIONAL: si deseas seguir usando jenkins como usuario en algunos casos
+# USER jenkins
