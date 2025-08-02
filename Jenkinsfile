@@ -6,7 +6,7 @@ pipeline {
     APP_NAME   = 'myapp'
     APP_PORT   = '8000'
     IMAGE_REPO = "${env.APP_NAME}"
-    JENKINS_CTN = 'jenkins' // nombre de tu contenedor (docker-compose lo creó así)
+    JENKINS_CTN = 'jenkins' // si tu contenedor se llama distinto, cámbialo aquí
   }
 
   stages {
@@ -14,17 +14,16 @@ pipeline {
       steps {
         deleteDir()
         git branch: 'main', url: 'https://github.com/geravillarreal/CI-CD-PYTHON-DOCKER-JENKINS.git'
-        sh 'pwd && ls -la'               // Diagnóstico: aquí debes ver requirements.txt
+        sh 'pwd && ls -la'  // diagnóstico
       }
     }
 
     stage('Tests') {
       steps {
-        // Monta el MISMO volumen que usa Jenkins y trabaja en la MISMA ruta
         sh """
           docker run --rm --volumes-from ${JENKINS_CTN} \
             -w "${WORKSPACE}" python:3.12-slim \
-            bash -lc "ls -la; pip install -r requirements.txt && pytest -q"
+            bash -lc 'pip install -r requirements.txt && pytest -q'
         """
       }
     }
@@ -33,7 +32,6 @@ pipeline {
       steps {
         script {
           def shortCommit = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
-          // Usamos un contenedor con docker CLI; el contexto '.' sale del volumen compartido
           sh """
             docker run --rm --volumes-from ${JENKINS_CTN} \
               -v /var/run/docker.sock:/var/run/docker.sock \
