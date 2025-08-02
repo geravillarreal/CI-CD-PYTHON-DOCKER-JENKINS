@@ -1,21 +1,17 @@
 pipeline {
   agent any
-  options { timestamps() }
-
-  triggers {
-    // Opción simple: revisar cada 2 min
-    pollSCM('H/2 * * * *')
-    // Si usas webhook, descomenta:
-    // githubPush()
-  }
+  options { timestamps(); skipDefaultCheckout(true) }  // <- importante
 
   environment {
     APP_NAME  = 'myapp'
     APP_PORT  = '8000'
-    IMAGE_REPO = "${env.APP_NAME}" // local
+    IMAGE_REPO = "${env.APP_NAME}"
   }
 
   stages {
+    stage('Checkout') {
+      steps { checkout scm }   // <- checkout explícito
+    }
 
     stage('Tests') {
       steps {
@@ -30,9 +26,7 @@ pipeline {
       steps {
         script {
           def shortCommit = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
-          sh """
-            docker build -t ${IMAGE_REPO}:${shortCommit} -t ${IMAGE_REPO}:latest .
-          """
+          sh "docker build -t ${IMAGE_REPO}:${shortCommit} -t ${IMAGE_REPO}:latest ."
         }
       }
     }
@@ -42,19 +36,13 @@ pipeline {
         sh '''
           (docker rm -f ${APP_NAME} || true)
           docker run -d --name ${APP_NAME} -p ${APP_PORT}:8000 ${IMAGE_REPO}:latest
-          sleep 2
-          docker ps --filter "name=${APP_NAME}"
         '''
       }
     }
   }
 
   post {
-    success {
-      echo "Listo: http://localhost:${APP_PORT}/health"
-    }
-    failure {
-      echo "Falló el pipeline: revisa logs."
-    }
+    success { echo "Listo: http://localhost:${APP_PORT}/health" }
+    failure { echo "Falló el pipeline: revisa logs." }
   }
 }
