@@ -19,13 +19,14 @@ pipeline {
     }
 
     stage('Tests') {
-      steps {
-        sh """
-          docker run --rm --volumes-from ${JENKINS_CTN} \
-            -w "${WORKSPACE}" python:3.12-slim \
-            bash -lc 'pip install -r requirements.txt && pytest -q'
-        """
-      }
+        steps {
+            sh """
+            docker run --rm --volumes-from ${JENKINS_CTN} \
+                -w "${WORKSPACE}" -e PYTHONPATH="${WORKSPACE}" \
+                python:3.12-slim \
+                bash -lc 'pip install -r requirements.txt && pytest -q'
+            """
+        }
     }
 
     stage('Build Docker Image') {
