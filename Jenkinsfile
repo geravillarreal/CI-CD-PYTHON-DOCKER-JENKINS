@@ -1,16 +1,23 @@
 pipeline {
   agent any
-  options { timestamps(); skipDefaultCheckout(true) }  // <- importante
+  options { timestamps(); skipDefaultCheckout(true) }  // evita checkout implícito
 
   environment {
-    APP_NAME  = 'myapp'
-    APP_PORT  = '8000'
+    APP_NAME   = 'myapp'
+    APP_PORT   = '8000'
     IMAGE_REPO = "${env.APP_NAME}"
   }
 
   stages {
     stage('Checkout') {
-      steps { checkout scm }   // <- checkout explícito
+      steps {
+        deleteDir() // limpia el workspace por si quedó algo
+        // Opción A: usa la config del job (Pipeline from SCM)
+        // checkout scm
+
+        // Opción B (recomendada ahora): checkout explícito directo al repo
+        git branch: 'main', url: 'https://github.com/geravillarreal/CI-CD-PYTHON-DOCKER-JENKINS.git'
+      }
     }
 
     stage('Tests') {
