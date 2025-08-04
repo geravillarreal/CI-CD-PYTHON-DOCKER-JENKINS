@@ -6,7 +6,7 @@ pipeline {
     APP_NAME   = 'myapp'
     APP_PORT   = '8000'
     IMAGE_REPO = "${env.APP_NAME}"
-    JENKINS_CTN = 'jenkins' // si tu contenedor se llama distinto, cámbialo aquí
+    JENKINS_CTN = 'jenkins'
   }
 
   stages {
@@ -14,7 +14,7 @@ pipeline {
       steps {
         deleteDir()
         git branch: 'main', url: 'https://github.com/geravillarreal/CI-CD-PYTHON-DOCKER-JENKINS.git'
-        sh 'pwd && ls -la'  // diagnóstico
+        sh 'pwd && ls -la'
       }
     }
 
