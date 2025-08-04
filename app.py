@@ -2,11 +2,6 @@ from flask import Flask, render_template_string, jsonify
 
 app = Flask(__name__)
 
-BOOTSTRAP_CDN = (
-    '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" '
-    'rel="stylesheet" integrity="sha384-9ndCyUaI0hJbXn0wXkzXCF3y86IH6Ez7GZm5jWnNQ9sKZCSk1Fv4KfqB0NWnI4vE" crossorigin="anonymous">'
-)
-
 @app.get("/")
 def home():
     html = f"""
@@ -15,7 +10,7 @@ def home():
       <head>
         <meta charset="utf-8">
         <title>CI/CD Demo</title>
-        {BOOTSTRAP_CDN}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
       </head>
       <body class="bg-light">
         <div class="container py-5">
