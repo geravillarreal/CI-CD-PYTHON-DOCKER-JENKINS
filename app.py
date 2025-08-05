@@ -16,7 +16,7 @@ def home():
         <div class="container py-5">
           <div class="card shadow-sm">
             <div class="card-body text-center">
-              <h1 class="display-5">Hello from Flask CI/CD!</h1>
+              <h1 class="display-5">Hola, desde el salon</h1>
               <p class="lead">This page is served from a Docker container deployed automatically by Jenkins.</p>
               <span class="badge bg-success">Pipeline&nbsp;Green</span>
             </div>
